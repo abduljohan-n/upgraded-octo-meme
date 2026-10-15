@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="forest-moss">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌿 ~ FernHaven / MossHaven ~ 🍄</title>
+    <!-- Tailwind CSS for utility layout -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Silkscreen (Pixel), VT323 (CRT/Retro), Outfit (Clean readable text) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================================================
+           NATURAL / COTTAGECORE RETRO THEMES
+           ========================================================================== */
+        :root[data-theme="forest-moss"] {
+            --bg-color: #e2e8f0;
+            --bg-pattern: #cbd5e1;
+            --window-bg: #f3f4f0;
+            --window-border: #4a5d4e;
+            --header-bg: linear-gradient(90deg, #3a4d3f, #4a5d4e);
+            --header-text: #f0fdf4;
+            --text-main: #1c2b1e;
+            --accent-color: #556b2f;
+            --accent-hover: #3b4a20;
+            --badge-bg: #d8e2dc;
+            --box-shadow: 4px 4px 0px #2d382e;
+            --wood-border: #8b5a2b;
+        }
+
+        :root[data-theme="deep-night-forest"] {
+            --bg-color: #121e17;
+            --bg-pattern: #1b2e23;
+            --window-bg: #1c2d23;
+            --window-border: #3d604b;
+            --header-bg: linear-gradient(90deg, #183324, #274b36);
+            --header-text: #d1fae5;
+            --text-main: #d1fae5;
+            --accent-color: #34d399;
+            --accent-hover: #059669;
+            --badge-bg: #112217;
+            --box-shadow: 4px 4px 0px #0a140e;
+            --wood-border: #5c3a1e;
+        }
+
+        :root[data-theme="sunlit-meadow"] {
+            --bg-color: #fefcbf;
+            --bg-pattern: #fef08a;
+            --window-bg: #fffbeb;
+            --window-border: #854d0e;
+            --header-bg: linear-gradient(90deg, #ca8a04, #65a30d);
+            --header-text: #ffffff;
+            --text-main: #3f2c06;
+            --accent-color: #65a30d;
+            --accent-hover: #4d7c0f;
+            --badge-bg: #fef3c7;
+            --box-shadow: 4px 4px 0px #713f12;
+            --wood-border: #a16207;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: radial-gradient(var(--bg-pattern) 18%, transparent 19%);
+            background-size: 18px 18px;
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            transition: background-color 0.3s ease;
+        }
+
+        .pixel-font {
+            font-family: 'Silkscreen', monospace;
+        }
+
+        .crt-font {
+            font-family: 'VT323', monospace;
+        }
+
+        /* Nature Window Frame */
+        .retro-window {
+            background-color: var(--window-bg);
+            border: 3px solid var(--window-border);
+            box-shadow: var(--box-shadow);
+            border-radius: 6px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .retro-header {
+            background: var(--header-bg);
+            color: var(--header-text);
+            padding: 6px 12px;
+            font-family: 'Silkscreen', monospace;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .retro-btn {
+            background-color: var(--window-bg);
+            border: 2px solid var(--window-border);
+            color: var(--text-main);
+            font-family: 'Silkscreen', monospace;
+            box-shadow: 2px 2px 0px var(--window-border);
+            transition: all 0.1s ease;
+            cursor: pointer;
+        }
+
+        .retro-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0px var(--window-border);
+            background-color: var(--badge-bg);
+        }
+
+        .retro-btn:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px var(--window-border);
+        }
+
+        .retro-btn.active {
+            background-color: var(--accent-color);
+            color: #ffffff;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+            border-left: 2px solid var(--window-border);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--window-border);
+            border-radius: 4px;
+        }
+
+        /* Floating Draggable Nature Sticker */
+        .sticker {
+            position: absolute;
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+            transition: transform 0.1s ease;
+        }
+        .sticker:active {
+            cursor: grabbing;
+            transform: scale(1.15) rotate(8deg);
+            z-index: 50;
+        }
+
+        /* Audio Visualizer Animation */
+        .bar {
+            width: 4px;
+            background-color: var(--header-text);
+            animation: bounce 0.8s infinite ease-in-out alternate;
+        }
+        .bar:nth-child(2) { animation-delay: 0.2s; }
+        .bar:nth-child(3) { animation-delay: 0.4s; }
+        .bar:nth-child(4) { animation-delay: 0.1s; }
+
+        @keyframes bounce {
+            0% { height: 4px; }
+            100% { height: 16px; }
+        }
+
+        .paused .bar {
+            animation-play-state: paused;
+            height: 4px;
+        }
+
+        /* Floating particle effect for plant */
+        .growth-particle {
+            position: absolute;
+            animation: floatUp 1s ease-out forwards;
+            pointer-events: none;
+            font-size: 14px;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-30px) scale(1.3); }
+        }
+    </style>
+</head>
+<body class="min-h-screen p-3 md:p-6 flex flex-col justify-between">
+
+    <!-- TOP HEADER / BANNER -->
+    <header class="max-w-5xl mx-auto w-full mb-6">
+        <div class="retro-window p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <span class="text-3xl animate-bounce">🌿</span>
+                <div>
+                    <h1 class="pixel-font text-xl md:text-2xl font-bold tracking-tight">~ JOHANN DHEU ALIBIN ~</h1>
+                    <p class="text-xs opacity-80 crt-font text-lg tracking-wider">MINI TASK IN MUSIC AND ARTS</p>
+                </div>
+            </div>
+
+            <!-- Theme Switcher Controls -->
+            <div class="flex items-center gap-2 text-xs pixel-font bg-black bg-opacity-10 p-2 rounded-lg">
+                <span class="mr-1 hidden sm:inline">BIOME:</span>
+                <button onclick="setTheme('forest-moss')" class="px-2 py-1 bg-emerald-800 text-emerald-100 rounded hover:opacity-80 text-[10px]">MOSS</button>
+                <button onclick="setTheme('deep-night-forest')" class="px-2 py-1 bg-slate-900 text-emerald-300 rounded hover:opacity-80 text-[10px]">NIGHT</button>
+                <button onclick="setTheme('sunlit-meadow')" class="px-2 py-1 bg-yellow-600 text-amber-100 rounded hover:opacity-80 text-[10px]">MEADOW</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-5xl mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-6 flex-grow">
+        
+        <!-- SIDEBAR (4 COLUMNS) -->
+        <aside class="md:col-span-4 flex flex-col gap-6">
+            
+            <!-- Profile Window -->
+            <div class="retro-window">
+                <div class="retro-header">
+                    <span>GARDENER_ID.LOG</span>
+                    <span>🌿</span>
+                </div>
+                <div class="p-4 flex flex-col items-center text-center">
+                    <!-- Botanical Avatar Frame -->
+                    <div class="relative mb-3">
+                        <img id="avatar-img" src="JOHANN.jpg" alt="Gardener Avatar" class="w-28 h-28 rounded-full border-4 border-emerald-700 object-cover shadow">
+                        <span class="absolute bottom-1 right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full" title="Gardening right now!"></span>
+                    </div>
+
+                    <h2 class="pixel-font font-bold text-lg mb-1">★ Johann Dheu Alibin ★</h2>
+                    <p class="text-xs italic mb-3 opacity-80">"We are the leaderss of today, and the insppiration of tomorrow."</p>
+
+                    <!-- Status Indicator -->
+                    <div class="w-full bg-black bg-opacity-10 p-2 rounded text-xs mb-4 text-left border border-emerald-600/30">
+                        <p class="font-semibold text-[11px] pixel-font">CURRENT STATUS:</p>
+                        <p class="crt-font text-lg leading-none mt-1" id="current-status">🤧 Sick, runny nose, sore throat, headache.</p>
+                    </div>
+
+                    <!-- Ambient Nature Audio Player Widget -->
+                    <div class="w-full retro-window p-2 bg-opacity-50">
+                        <div class="flex items-center justify-between text-xs px-1 mb-2">
+                            <span class="pixel-font text-[10px]" id="track-title">🎵 Nature Lofi</span>
+                            <div id="visualizer" class="flex items-end gap-0.5 h-4 paused">
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                            </div>
+                        </div>
+
+                        <!-- Track Selector -->
+                        <select id="track-select" onchange="changeTrack()" class="w-full text-xs p-1 mb-2 rounded bg-white/50 border border-emerald-700 text-xs font-sans">
+                            <option value="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3">Lofi Forest Ambience</option>
+                            <option value="https://cdn.pixabay.com/download/audio/2021/09/06/audio_8417c80a22.mp3?filename=gentle-rain-16580.mp3">Gentle Rain Shower</option>
+                        </select>
+
+                        <button id="bgm-toggle" onclick="toggleBGM()" class="retro-btn w-full text-xs py-1.5 flex items-center justify-center gap-2">
+                            <span>▶ PLAY AMBIENCE</span>
+                        </button>
+                        <audio id="bgm-audio" loop src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3"></audio>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="retro-window">
+                <div class="retro-header">
+                    <span>EXPLORE.SYS</span>
+                    <span>📖</span>
+                </div>
+                <nav class="p-3 flex flex-col gap-2">
+                    <button onclick="switchTab('home')" class="nav-btn retro-btn p-2 text-left text-xs active" id="btn-home">🏡 HOME</button>
+                    <button onclick="switchTab('blog')" class="nav-btn retro-btn p-2 text-left text-xs" id="btn-blog">📜 BLOG</button>
+                    <button onclick="switchTab('gallery')" class="nav-btn retro-btn p-2 text-left text-xs" id="btn-gallery">🪴 GALLERY</button>
+                    <button onclick="switchTab('guestbook')" class="nav-btn retro-btn p-2 text-left text-xs" id="btn-guestbook">💌 GUESTBOOK</button>
+                </nav>
+            </div>
+
+            <!-- Interactive Terrarium / Virtual Plant Widget -->
+            <div class="retro-window">
+                <div class="retro-header">
+                    <span>TERRARIUM_PET.EXE</span>
+                    <span>🪵</span>
+                </div>
+                <div class="p-3 text-center relative" id="terrarium-container">
+                    <div id="plant-display" class="text-5xl my-2 select-none transition-transform duration-300 transform hover:scale-110">
+                        🌱
+                    </div>
+                    <p class="text-xs pixel-font mb-1" id="plant-level-title">Sprout (Lvl 1)</p>
+                    <p class="text-[11px] mb-2 text-emerald-800 dark:text-emerald-300" id="plant-status-text">Needs water & sunlight!</p>
+
+                    <!-- Growth Bar -->
+                    <div class="w-full bg-black/10 rounded-full h-2.5 mb-3 overflow-hidden border border-emerald-700">
+                        <div id="plant-growth-bar" class="bg-emerald-600 h-2.5 rounded-full transition-all duration-300" style="width: 20%;"></div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex gap-2 justify-center">
+                        <button onclick="carePlant('water')" class="retro-btn px-3 py-1 text-xs">💧 Water</button>
+                        <button onclick="carePlant('sun')" class="retro-btn px-3 py-1 text-xs">☀️ Sun</button>
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- MAIN CONTENT AREA (8 COLUMNS) -->
+        <section class="md:col-span-8 flex flex-col gap-6">
+
+            <!-- TAB 1: HOME -->
+            <div id="tab-home" class="tab-content retro-window p-4 md:p-6">
+                <div class="retro-header -mx-4 -mt-4 md:-mx-6 md:-mt-6 mb-4">
+                    <span>WELCOME_TO_THE_LOBBY.HTM</span>
+                    <span>🌿</span>
+                </div>
+                <h2 class="pixel-font text-lg font-bold mb-3">Welcome to my Digital Lobby!</h2>
+                <p class="text-sm mb-4 leading-relaxed">
+                    Step inside away from the fast web! This is a slow-crafted space dedicated to personal interests, cozy retro web design, and nature notes. Grab a cup of tea, leave a note in the guestbook, or stick some leaves on the board.
+                </p>
+
+                <!-- Forest Updates Box -->
+                <div class="border-2 border-dashed border-emerald-700/40 p-3 rounded-lg mb-6 bg-black/5">
+                    <h3 class="pixel-font text-xs font-bold mb-2">🍄 RECENT FOREST UPDATES:</h3>
+                    <ul class="text-xs space-y-1.5 crt-font text-base">
+                        <li><span class="font-bold">[2026-10-15]</span> Redesigned space with the "MossHaven" green palette & virtual terrarium!</li>
+                        <li><span class="font-bold">[2026-09-30]</span> Added pressed fern pressings in the Botanical Gallery.</li>
+                        <li><span class="font-bold">[2026-09-12]</span> Fixed Guestbook storage features.</li>
+                    </ul>
+                </div>
+
+                <!-- Interactive Nature Sticker Canvas -->
+                <div class="border-2 border-emerald-700/50 rounded-lg p-3 relative h-72 overflow-hidden bg-white/40 dark:bg-black/20" id="sticker-board">
+                    <div class="text-xs pixel-font opacity-70 pointer-events-none mb-1">
+                        📌 NATURE STICKER CANVAS (Drag stickers across the board!):
+                    </div>
+                    
+                    <!-- Nature Stickers -->
+                    <div class="sticker text-3xl" style="top: 40px; left: 20px;" title="Fern">🌿</div>
+                    <div class="sticker text-3xl" style="top: 50px; left: 140px;" title="Mushroom">🍄</div>
+                    <div class="sticker text-3xl" style="top: 130px; left: 60px;" title="Beetle">🪲</div>
+                    <div class="sticker text-3xl" style="top: 100px; left: 240px;" title="Acorn">🌰</div>
+                    <div class="sticker text-3xl" style="top: 160px; left: 180px;" title="Frog">🐸</div>
+                    <div class="sticker text-3xl" style="top: 180px; left: 300px;" title="Snail">🐌</div>
+                </div>
+            </div>
+
+            <!-- TAB 2: FOREST LOG / BLOG -->
+            <div id="tab-blog" class="tab-content retro-window p-4 md:p-6 hidden">
+                <div class="retro-header -mx-4 -mt-4 md:-mx-6 md:-mt-6 mb-4">
+                    <span>FOREST_JOURNAL.DOC</span>
+                    <span>📖</span>
+                </div>
+                <h2 class="pixel-font text-lg font-bold mb-4">Field Notes & Journal</h2>
+
+                <!-- Article 1 -->
+                <article class="mb-6 border-b pb-4 border-emerald-700/30">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-xs opacity-75 pixel-font">OCTOBER 13, 2026</span>
+                        <span class="px-2 py-0.5 bg-emerald-800 text-emerald-100 text-[10px] pixel-font rounded">SPELLING</span>
+                    </div>
+                    <h3 class="text-base font-bold text-emerald-800 dark:text-emerald-300">3rd Place UNP Spelling Bee Contest</h3>
+                    <p class="text-xs mt-2 leading-relaxed">
+                        Defeated 24 other schools in Ilocos Sur in a spelling bee contest at University of Northern Philippines. With 2 days of practice, our team placed third with 38 points .
+                    </p>
+                </article>
+
+                <!-- Article 2 -->
+                <article class="mb-2">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-xs opacity-75 pixel-font">OCTOBER 14, 2026</span>
+                        <span class="px-2 py-0.5 bg-amber-800 text-amber-100 text-[10px] pixel-font rounded">NCAE</span>
+                    </div>
+                    <h3 class="text-base font-bold text-emerald-800 dark:text-emerald-300">NCAE Prelims</h3>
+                    <p class="text-xs mt-2 leading-relaxed">
+                        I was the first to finish the test for I had my own laptop. Also lent it to the school for other students who will take the test.
+                    </p>
+                </article>
+            </div>
+
+            <!-- TAB 3: PLANT GALLERY -->
+            <div id="tab-gallery" class="tab-content retro-window p-4 md:p-6 hidden">
+                <div class="retro-header -mx-4 -mt-4 md:-mx-6 md:-mt-6 mb-4">
+                    <span>BOTANICAL_COLLECTION.DLL</span>
+                    <span>🪴</span>
+                </div>
+                <h2 class="pixel-font text-lg font-bold mb-3">SPELLING BEE GALLERY</h2>
+                <p class="text-xs mb-4">Images from the spelling bee competition!</p>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    <div class="retro-window p-2 text-center bg-white/70 dark:bg-black/40">
+                        <img src="p1.jpg" alt="Fern" class="w-full h-28 object-cover rounded mb-1">
+                        <span class="text-[10px] pixel-font">The Whole Team</span>
+                    </div>
+                    <div class="retro-window p-2 text-center bg-white/70 dark:bg-black/40">
+                        <img src="p2.jpg" alt="Moss" class="w-full h-28 object-cover rounded mb-1">
+                        <span class="text-[10px] pixel-font">Awarding Ceremony</span>
+                    </div>
+                    <div class="retro-window p-2 text-center bg-white/70 dark:bg-black/40">
+                        <img src="p3.jpg" alt="Mushroom" class="w-full h-28 object-cover rounded mb-1">
+                        <span class="text-[10px] pixel-font">During the Competition</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: GUESTBOOK -->
+            <div id="tab-guestbook" class="tab-content retro-window p-4 md:p-6 hidden">
+                <div class="retro-header -mx-4 -mt-4 md:-mx-6 md:-mt-6 mb-4">
+                    <span>GUESTBOOK.LOG</span>
+                    <span>💌</span>
+                </div>
+                <h2 class="pixel-font text-lg font-bold mb-2">Friends Guestbook</h2>
+                <p class="text-xs mb-4">Leave a note or a friendly message in the guestbook!</p>
+
+                <!-- Form -->
+                <form id="guestbook-form" onsubmit="addGuestbookEntry(event)" class="flex flex-col gap-3 mb-6 bg-black/5 p-3 rounded border border-emerald-700/30">
+                    <div>
+                        <label class="block text-xs pixel-font mb-1">Guest's Name:</label>
+                        <input type="text" id="gb-name" required class="w-full p-2 text-xs rounded border border-emerald-700/50 bg-white dark:bg-slate-900 focus:outline-none" placeholder="e.g. Johann">
+                    </div>
+                    <div>
+                        <label class="block text-xs pixel-font mb-1">Message:</label>
+                        <textarea id="gb-message" required rows="2" class="w-full p-2 text-xs rounded border border-emerald-700/50 bg-white dark:bg-slate-900 focus:outline-none" placeholder="Leaving a note here..."></textarea>
+                    </div>
+                    <button type="submit" class="retro-btn py-2 text-xs font-bold">🍃 LEAVE MESSAGE</button>
+                </form>
+
+                <!-- Message List -->
+                <div class="space-y-3" id="guestbook-entries">
+                    <!-- Dynamic -->
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="max-w-5xl mx-auto w-full mt-6">
+        <div class="retro-window p-3 text-center text-xs pixel-font flex flex-col sm:flex-row justify-between items-center gap-2">
+            <span>© 2026 johanns.neocities.org</span>
+            <span class="animate-pulse">Thank You for viewing my website!!!</span>
+        </div>
+    </footer>
+
+    <!-- INTERACTION LOGIC -->
+    <script>
+        /* ==========================================================================
+           TAB SWITCHING
+           ========================================================================== */
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+
+            const targetTab = document.getElementById(`tab-${tabId}`);
+            const targetBtn = document.getElementById(`btn-${tabId}`);
+            if (targetTab) targetTab.classList.remove('hidden');
+            if (targetBtn) targetBtn.classList.add('active');
+        }
+
+        /* ==========================================================================
+           THEME SWITCHER
+           ========================================================================== */
+        function setTheme(themeName) {
+            document.documentElement.setAttribute('data-theme', themeName);
+            localStorage.setItem('mosshaven_theme', themeName);
+        }
+
+        const savedTheme = localStorage.getItem('mosshaven_theme') || 'forest-moss';
+        setTheme(savedTheme);
+
+        /* ==========================================================================
+           AMBIENT AUDIO PLAYER
+           ========================================================================== */
+        let isPlaying = false;
+        const bgmAudio = document.getElementById('bgm-audio');
+        const bgmBtn = document.getElementById('bgm-toggle');
+        const visualizer = document.getElementById('visualizer');
+        const trackSelect = document.getElementById('track-select');
+        const trackTitle = document.getElementById('track-title');
+
+        function toggleBGM() {
+            if (isPlaying) {
+                bgmAudio.pause();
+                bgmBtn.querySelector('span').innerText = '▶ PLAY AMBIENCE';
+                visualizer.classList.add('paused');
+            } else {
+                bgmAudio.play().then(() => {
+                    bgmBtn.querySelector('span').innerText = '⏸ PAUSE AMBIENCE';
+                    visualizer.classList.remove('paused');
+                }).catch(err => {
+                    console.log("Audio play blocked by browser policy:", err);
+                });
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function changeTrack() {
+            const selectedUrl = trackSelect.value;
+            const selectedText = trackSelect.options[trackSelect.selectedIndex].text;
+            bgmAudio.src = selectedUrl;
+            trackTitle.innerText = `🎵 ${selectedText}`;
+            if (isPlaying) {
+                bgmAudio.play();
+            }
+        }
+
+        /* ==========================================================================
+           INTERACTIVE VIRTUAL PLANT / TERRARIUM
+           ========================================================================== */
+        let plantGrowth = 20;
+        let plantStage = 1;
+
+        const stages = [
+            { level: 1, title: "Sprout (Lvl 1)", icon: "🌱", status: "Needs water & sunlight!" },
+            { level: 2, title: "Sapling (Lvl 2)", icon: "🌿", status: "Growing nicely!" },
+            { level: 3, title: "Fern Bush (Lvl 3)", icon: "🪴", status: "Flourishing fern!" },
+            { level: 4, title: "Forest Tree (Lvl MAX)", icon: "🌳", status: "Fully grown majesty!" }
+        ];
+
+        function carePlant(type) {
+            plantGrowth += 15;
+            if (plantGrowth >= 100 && plantStage < stages.length) {
+                plantGrowth = 20;
+                plantStage++;
+            } else if (plantGrowth > 100) {
+                plantGrowth = 100;
+            }
+
+            spawnParticle(type === 'water' ? '💧' : '☀️');
+            updatePlantUI();
+        }
+
+        function spawnParticle(emoji) {
+            const container = document.getElementById('terrarium-container');
+            const particle = document.createElement('div');
+            particle.className = 'growth-particle';
+            particle.innerText = emoji;
+            particle.style.left = `${Math.random() * 60 + 20}%`;
+            particle.style.top = '40%';
+            container.appendChild(particle);
+            setTimeout(() => particle.remove(), 1000);
+        }
+
+        function updatePlantUI() {
+            const current = stages[plantStage - 1];
+            document.getElementById('plant-display').innerText = current.icon;
+            document.getElementById('plant-level-title').innerText = current.title;
+            document.getElementById('plant-status-text').innerText = current.status;
+            document.getElementById('plant-growth-bar').style.width = `${plantGrowth}%`;
+        }
+
+        /* ==========================================================================
+           DRAGGABLE NATURE STICKER CANVAS
+           ========================================================================== */
+        const stickers = document.querySelectorAll('.sticker');
+        stickers.forEach(sticker => {
+            let isDragging = false;
+            let startX, startY, initialLeft, initialTop;
+
+            const onStart = (e) => {
+                isDragging = true;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                startX = clientX;
+                startY = clientY;
+                initialLeft = sticker.offsetLeft;
+                initialTop = sticker.offsetTop;
+                document.addEventListener('mousemove', onMove);
+                document.addEventListener('mouseup', onEnd);
+                document.addEventListener('touchmove', onMove);
+                document.addEventListener('touchend', onEnd);
+            };
+
+            const onMove = (e) => {
+                if (!isDragging) return;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                const deltaX = clientX - startX;
+                const deltaY = clientY - startY;
+                sticker.style.left = `${initialLeft + deltaX}px`;
+                sticker.style.top = `${initialTop + deltaY}px`;
+            };
+
+            const onEnd = () => {
+                isDragging = false;
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onEnd);
+                document.removeEventListener('touchmove', onMove);
+                document.removeEventListener('touchend', onEnd);
+            };
+
+            sticker.addEventListener('mousedown', onStart);
+            sticker.addEventListener('touchstart', onStart);
+        });
+
+        /* ==========================================================================
+           PERSISTENT GUESTBOOK LOGIC
+           ========================================================================== */
+        const defaultEntries = [
+            { name: "ForestWalker", message: "Love the moss theme! Such a relaxing layout.", date: "2026-10-14" },
+            { name: "Willow_Bee", message: "Watered your fern! Hope it grows tall ⭐", date: "2026-10-11" }
+        ];
+
+        function getGuestbookEntries() {
+            const stored = localStorage.getItem('mosshaven_guestbook');
+            return stored ? JSON.parse(stored) : defaultEntries;
+        }
+
+        function renderGuestbook() {
+            const container = document.getElementById('guestbook-entries');
+            const entries = getGuestbookEntries();
+            container.innerHTML = entries.map(entry => `
+                <div class="p-3 bg-white/60 dark:bg-black/30 rounded border border-emerald-700/30 text-xs">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="pixel-font font-bold text-emerald-800 dark:text-emerald-300">${escapeHtml(entry.name)}</span>
+                        <span class="crt-font text-sm opacity-70">${entry.date}</span>
+                    </div>
+                    <p>${escapeHtml(entry.message)}</p>
+                </div>
+            `).join('');
+        }
+
+        function addGuestbookEntry(event) {
+            event.preventDefault();
+            const nameInput = document.getElementById('gb-name');
+            const msgInput = document.getElementById('gb-message');
+
+            const newEntry = {
+                name: nameInput.value,
+                message: msgInput.value,
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            const entries = getGuestbookEntries();
+            entries.unshift(newEntry);
+            localStorage.setItem('mosshaven_guestbook', JSON.stringify(entries));
+
+            nameInput.value = '';
+            msgInput.value = '';
+            renderGuestbook();
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        }
+
+        renderGuestbook();
+    </script>
+</body>
+</html>
